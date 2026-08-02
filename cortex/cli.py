@@ -6,7 +6,7 @@ Subcommands
 -----------
   planes            print the four-plane stack (nodes / address bits)
   resolve <addr>    resolve a deep operand by 13-bit L4 address
-  veto <open> <closer> [expect...]   apply the veto rule
+  veto --open FUNCTIONDEF --closer RETURN [--expect FUNCTIONDEF:RETURN]   apply the veto rule
   sense             show the cortex sensor feedback
   verify <trace.json>               verify a governance trace
   policy            emit the cortex governance as an I-13 data collapse
@@ -85,10 +85,10 @@ def main(argv=None) -> int:
     p = sub.add_parser("planes"); p.set_defaults(func=_cmd_planes)
     p = sub.add_parser("resolve", help="resolve an L4 address")
     p.add_argument("addr"); p.set_defaults(func=_cmd_resolve)
-    p = sub.add_parser("veto")
-    p.add_argument("open", nargs="+", help="open stack, most-recent last")
-    p.add_argument("closer")
-    p.add_argument("expect", nargs="*", help="opener:closer pairs")
+    p = sub.add_parser("veto", help="apply the veto rule")
+    p.add_argument("--open", nargs="+", required=True, help="open stack, most-recent last")
+    p.add_argument("--closer", required=True, help="candidate closer")
+    p.add_argument("--expect", nargs="*", default=[], help="opener:closer pairs")
     p.set_defaults(func=_cmd_veto)
     p = sub.add_parser("sense"); p.set_defaults(func=_cmd_sense)
     p = sub.add_parser("verify"); p.add_argument("trace"); p.set_defaults(func=_cmd_verify)
